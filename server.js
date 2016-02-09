@@ -1,5 +1,6 @@
 var express = require('express');
-var fs = require('fs');
+var router = express.Router();
+
 var request = require('request');
 var cheerio = require('cheerio');
 var Promise = require('bluebird');
