@@ -5,7 +5,14 @@ var cheerio = require('cheerio');
 var app     = express();
 
 app.get('/', function(req, res){
-  res.end('hello');
+  request({
+    method: 'GET',
+    url: 'https://9gag.com'
+  }, function(err, response, body){
+    if(err) return console.error(err);
+    // console.log(body);
+    res.end(body);
+  });
 });
 
 app.listen('3000');

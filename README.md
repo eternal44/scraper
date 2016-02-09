@@ -1,7 +1,6 @@
-Scraper digest
+Trender
 ======
-This is a site that scrapes info from sites and compiles them on a
-central site.
+Tracks trending topics on your favorite sites.
 
 Usage
 -----
