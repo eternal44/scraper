@@ -3,10 +3,16 @@
   "version": "0.0.1",
   "description": "Scrape le web.",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "author": "James",
   "dependencies": {
     "cheerio": "^0.20.0",
     "express": "^4.13.4",
     "request": "^2.69.0"
+  },
+  "engines": {
+    "node": "5.4.1"
   }
 }
