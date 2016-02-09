@@ -19,11 +19,15 @@ var countWords = function(collection){
       if(!(_.contains(excludedWords, element))){
         memo[element]++ || (memo[element] = 1);
       }
-        return memo;
+      return memo;
     }, {}));
   });
   return wordCount;
 };
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
 
 app.get('/data', function(req, res){
   promiseRequest({
@@ -71,7 +75,6 @@ app.get('/data', function(req, res){
         }
       });
     res.send(countWords(allData));
-    // res.send(allData);
     });
   });
 });
