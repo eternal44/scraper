@@ -9,14 +9,17 @@ var app     = express();
 
 var allData = [];
 var promiseRequest = Promise.promisify(request);
+var excludedWords =['is', 'why', 'the', 'this', 'not', 'so', 'if', 'to', 'how', 'for', 'of', 'and', 'a', 'on', 'no', 'in', 'it', 'let', 'be', 'get'];
 
 var countWords = function(collection){
   var wordCount = [];
   _.each(collection, function(element){
     wordCount.push(_.reduce(element.words, function(memo, element){
-      memo[element]++ || (memo[element] = 1);
-      console.log(memo);
-      return memo;
+      element = element.toLowerCase();
+      if(!(_.contains(excludedWords, element))){
+        memo[element]++ || (memo[element] = 1);
+      }
+        return memo;
     }, {}));
   });
   return wordCount;
