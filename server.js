@@ -3,11 +3,19 @@ var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var Promise = require('bluebird');
+var _ = require('underscore');
 
 var app     = express();
 
 var allData = [];
 var promiseRequest = Promise.promisify(request);
+
+var countWords = function(collection){
+  _.each(collection, function(element, index){
+    console.log('element: ', element);
+    // return element;
+  });
+};
 
 app.get('/', function(req, res){
   promiseRequest({
@@ -18,14 +26,17 @@ app.get('/', function(req, res){
     // TODO: extract as 'scrape' function
     $ = cheerio.load(result.body);
 
-    allData.push({ ycombinator: [] });
+    allData.push({
+      site: 'ycombinator',
+      words: []
+    });
     $('.title a').each(function() {
       var title = this.children[0].data;
       if(title !== undefined){
         var splitTilte = title.split(' ');
 
         for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to allData array
-          allData[0].ycombinator.push(splitTilte[i]);
+          allData[0].words.push(splitTilte[i]);
         }
       }
     });
@@ -37,18 +48,22 @@ app.get('/', function(req, res){
       // TODO: extract as 'scrape' function
       $ = cheerio.load(result.body);
 
-      allData.push({ reddit: [] });
+      allData.push({
+        site: 'reddit',
+        words: []
+      });
       $('a.title').each(function() {
         var title = this.children[0].data;
         if(title !== undefined){
           var splitTilte = title.split(' ');
 
           for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to allData array
-            allData[1].reddit.push(splitTilte[i]);
+            allData[1].words.push(splitTilte[i]);
           }
         }
       });
-    res.send(allData);
+    res.send(countWords(allData));
+    // res.send(allData);
     });
   });
 });
