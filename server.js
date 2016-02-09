@@ -11,10 +11,15 @@ var allData = [];
 var promiseRequest = Promise.promisify(request);
 
 var countWords = function(collection){
-  _.each(collection, function(element, index){
-    console.log('element: ', element);
-    // return element;
+  var wordCount = [];
+  _.each(collection, function(element){
+    wordCount.push(_.reduce(element.words, function(memo, element){
+      memo[element]++ || (memo[element] = 1);
+      console.log(memo);
+      return memo;
+    }, {}));
   });
+  return wordCount;
 };
 
 app.get('/', function(req, res){
