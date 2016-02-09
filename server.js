@@ -6,15 +6,16 @@ var Promise = require('bluebird');
 
 var app     = express();
 
-app.get('/', function(req, res){
-  var allData = [];
-  var promiseRequest = Promise.promisify(request);
-  promiseRequest({
+var allData = [];
+var promiseRequest = Promise.promisify(request);
 
+app.get('/', function(req, res){
+  promiseRequest({
       method: 'GET',
       url: 'https://news.ycombinator.com/'
     }
   ).then(function(result){
+    // TODO: extract as 'scrape' function
     $ = cheerio.load(result.body);
 
     allData.push({ ycombinator: [] });
@@ -33,8 +34,7 @@ app.get('/', function(req, res){
       method: 'GET',
       url: 'https://www.reddit.com/r/python+ruby+php+perl+javascript'
     }).then(function(result){
-      // console.log(result);
-
+      // TODO: extract as 'scrape' function
       $ = cheerio.load(result.body);
 
       allData.push({ reddit: [] });
@@ -48,8 +48,6 @@ app.get('/', function(req, res){
           }
         }
       });
-          // console.log('-----------', allData);
-          // console.log('-----------', allData[1].reddit);
     res.send(allData);
     });
   });
