@@ -1,5 +1,4 @@
 var express = require('express');
-var router = express.Router();
 
 var request = require('request');
 var cheerio = require('cheerio');
@@ -26,7 +25,7 @@ var countWords = function(collection){
   return wordCount;
 };
 
-app.get('/', function(req, res){
+app.get('/data', function(req, res){
   promiseRequest({
       method: 'GET',
       url: 'https://news.ycombinator.com/'
