@@ -7,17 +7,16 @@ var app     = express();
 app.get('/', function(req, res){
   request({
     method: 'GET',
-    url: 'https://github.com/showcases'
+    url: 'https://news.ycombinator.com/'
   }, function(err, response, body){
     if (err) return console.error(err);
 
-    // Tell Cherrio to load the HTML
     $ = cheerio.load(body);
     var result = [];
-    $('li.collection-card').each(function() {
-      var href = $('a.collection-card-image', this).attr('href');
-      if (href.lastIndexOf('/') > 0) {
-        result.push($('h3', this).text());
+
+    $('.title a').each(function() {
+      if(this.children[0].data !== undefined){
+        result.push(this.children[0].data);
       }
     });
     res.send(result);
