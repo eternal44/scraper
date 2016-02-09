@@ -5,6 +5,7 @@ var cheerio = require('cheerio');
 var app     = express();
 
 app.get('/', function(req, res){
+  var result = [];
   request({
     method: 'GET',
     url: 'https://news.ycombinator.com/'
@@ -12,11 +13,11 @@ app.get('/', function(req, res){
     if (err) return console.error(err);
 
     $ = cheerio.load(body);
-    var result = [];
 
+    result.push( { ycombinator : [] });
     $('.title a').each(function() {
       if(this.children[0].data !== undefined){
-        result.push(this.children[0].data);
+        result[0].ycombinator.push(this.children[0].data);
       }
     });
     res.send(result);
