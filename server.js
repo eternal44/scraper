@@ -14,10 +14,16 @@ app.get('/', function(req, res){
 
     $ = cheerio.load(body);
 
+    console.log('--------------');
     result.push( { ycombinator : [] });
     $('.title a').each(function() {
-      if(this.children[0].data !== undefined){
-        result[0].ycombinator.push(this.children[0].data);
+      var title = this.children[0].data;
+      if(title !== undefined){
+        var splitTilte = title.split(' ');
+
+        for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to result array
+          result[0].ycombinator.push(splitTilte[i]);
+        }
       }
     });
     res.send(result);
