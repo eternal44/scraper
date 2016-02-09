@@ -65,7 +65,7 @@ app.get('/data', function(req, res){
           }
         }
       });
-      fs.writeFile("flare.json", JSON.stringify(allData), function(err){
+      fs.writeFile("flare.json", JSON.stringify(countWords(allData)), function(err){
         if(err) console.err('file didn\'t save');
         console.log('file saved');
       });
