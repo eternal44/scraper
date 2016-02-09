@@ -28,7 +28,31 @@ app.get('/', function(req, res){
         }
       }
     });
+  }).then(function(){
+    promiseRequest({
+      method: 'GET',
+      url: 'https://www.reddit.com/r/python+ruby+php+perl+javascript'
+    }).then(function(result){
+      // console.log(result);
+
+      $ = cheerio.load(result.body);
+
+      allData.push({ reddit: [] });
+      $('a.title').each(function() {
+        var title = this.children[0].data;
+        if(title !== undefined){
+          var splitTilte = title.split(' ');
+
+          for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to allData array
+            allData[1].reddit.push(splitTilte[i]);
+          }
+        }
+      });
+          // console.log('-----------', allData);
+          // console.log('-----------', allData[1].reddit);
     res.send(allData);
+    });
+
   });
 });
 
