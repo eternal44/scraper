@@ -1,4 +1,5 @@
 var express = require('express');
+var fs = require('fs');
 
 var request = require('request');
 var cheerio = require('cheerio');
@@ -28,6 +29,8 @@ var countWords = function(collection){
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
+
+app.use(express.static('./'));
 
 app.get('/data', function(req, res){
   promiseRequest({
@@ -74,7 +77,11 @@ app.get('/data', function(req, res){
           }
         }
       });
-    res.send(countWords(allData));
+      fs.writeFile("flare.json", JSON.stringify(countWords(allData)), function(err){
+        if(err) console.err('file didn\'t save');
+        console.log('file saved');
+      });
+      res.send(countWords(allData));
     });
   });
 });
