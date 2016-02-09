@@ -2,27 +2,39 @@ var express = require('express');
 var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
+var Promise = require('bluebird');
+
 var app     = express();
 
 app.get('/', function(req, res){
-  request({
-    method: 'GET',
-    url: 'https://github.com/showcases'
-  }, function(err, response, body){
-    if (err) return console.error(err);
+  var allData = [];
+  var promiseRequest = Promise.promisify(request);
+  promiseRequest({
 
-    // Tell Cherrio to load the HTML
-    $ = cheerio.load(body);
-    var result = [];
-    $('li.collection-card').each(function() {
-      var href = $('a.collection-card-image', this).attr('href');
-      if (href.lastIndexOf('/') > 0) {
-        result.push($('h3', this).text());
-      }
-    });
-    res.send(result);
+      method: 'GET',
+      url: 'https://news.ycombinator.com/'
+    }
+  ).then(function(result){
+    console.log(result);
+
+     $ = cheerio.load(result);
+
+     console.log('--------------');
+     allData.push( { ycombinator : [] });
+     // $('.title a').each(function() {
+     //   var title = this.children[0].data;
+     //   if(title !== undefined){
+     //     var splitTilte = title.split(' ');
+
+     //     for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to result array
+     //       allData[0].ycombinator.push(splitTilte[i]);
+     //     }
+     //   }
+     // });
+     });
+
+    console.log(allData);
   });
-});
 
 var port = process.env.PORT || 3000;
 app.listen(port);
