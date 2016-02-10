@@ -13,13 +13,26 @@ var promiseRequest = Promise.promisify(request);
 var excludedWords =['is', 'why', 'the', 'this', 'not', 'so', 'if', 'to', 'how', 'for', 'of', 'and', 'a', 'on', 'no', 'in', 'it', 'let', 'be', 'get'];
 
 var countWords = function(collection){
-  return _.reduce(collection, function(memo, element){
-    element = element.toLowerCase();
-    if(!(_.contains(excludedWords, element))){
-      memo[element]++ || (memo[element] = 1);
-    }
-    return memo;
-  }, {});
+  var wordCount = {
+    "name": "flare",
+    "children": [
+    ]
+  };
+  _.each(collection, function(element){
+    wordCount.children = {
+      name: element.site,
+      'children': []
+    };
+    wordCount.children.children.push(_.reduce(element.words, function(memo, element){
+      element = element.toLowerCase();
+      if(!(_.contains(excludedWords, element))){
+        memo[element]++ || (memo[element] = 1);
+      }
+      return memo;
+    }, {}));
+  });
+  // wordCount[0].name = 'ycombinator';
+  return wordCount;
 };
 
 app.get('/', function(req, res){
@@ -37,13 +50,18 @@ app.get('/data', function(req, res){
     // TODO: extract as 'scrape' function
     $ = cheerio.load(result.body);
 
+    // this code will be redundant after you pass it through countWords()
+    allData.push({
+      site: 'ycombinator',
+      words: []
+    });
     $('.title a').each(function() {
       var title = this.children[0].data;
       if(title !== undefined){
         var splitTilte = title.split(' ');
 
         for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to allData array
-          allData.push(splitTilte[i]);
+          allData[0].words.push(splitTilte[i]);
         }
       }
     });
@@ -55,13 +73,18 @@ app.get('/data', function(req, res){
       // TODO: extract as 'scrape' function
       $ = cheerio.load(result.body);
 
+      // this code will be redundant after you pass it through countWords()
+      allData.push({
+        site: 'reddit',
+        words: []
+      });
       $('a.title').each(function() {
         var title = this.children[0].data;
         if(title !== undefined){
           var splitTilte = title.split(' ');
 
           for (var i = 0; i < splitTilte.length; i++){ // couldn't concat this to allData array
-            allData.push(splitTilte[i]);
+            allData[1].words.push(splitTilte[i]);
           }
         }
       });
@@ -69,7 +92,8 @@ app.get('/data', function(req, res){
         if(err) console.err('file didn\'t save');
         console.log('file saved');
       });
-      // console.log(countWords(allData));
+      // console.log(allData[0].words);
+      // console.log(allData);
       res.send(countWords(allData));
     });
   });
