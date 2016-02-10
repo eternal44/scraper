@@ -10,7 +10,7 @@ var app     = express();
 
 var allData = [];
 var promiseRequest = Promise.promisify(request);
-var excludedWords =['is', 'why', 'the', 'this', 'not', 'so', 'if', 'to', 'how', 'for', 'of', 'and', 'a', 'on', 'no', 'in', 'it', 'let', 'be', 'get'];
+var excludedWords =['at', 'will', 'within', 'been', 'but', "it's", 'is', 'why', 'the', 'this', 'not', 'so', 'if', 'to', 'how', 'for', 'of', 'and', 'a', 'on', 'no', 'in', 'it', 'let', 'be', 'get'];
 
 var countWords = function(collection){
   var wordCount = {
@@ -91,9 +91,6 @@ app.get('/data', function(req, res){
           }
         }
       });
-      fs.writeFile("flare.json", JSON.stringify(countWords(allData)), function(err){
-        if(err) console.err('file didn\'t save');
-        console.log('file saved');
       });
       var wordCount = countWords(allData);
       console.log(wordCount);
@@ -115,8 +112,11 @@ app.get('/data', function(req, res){
 
         ]
       };
-      res.send(finalObject);
-    });
+      fs.writeFile("flare.json", JSON.stringify(finalObject), function(err){
+        if(err) console.err('file didn\'t save');
+        console.log('file saved');
+        res.send(finalObject);
+      });
   });
 });
 
