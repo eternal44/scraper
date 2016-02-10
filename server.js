@@ -19,6 +19,7 @@ var countWords = function(collection){
     ]
   };
   _.each(collection, function(element){
+    console.log('----', element.site);
     wordCount.children = {
       name: element.site,
       'children': []
@@ -31,6 +32,8 @@ var countWords = function(collection){
       return memo;
     }, {}));
   });
+
+  console.log(wordCount);
   // wordCount[0].name = 'ycombinator';
   return wordCount;
 };
@@ -92,13 +95,40 @@ app.get('/data', function(req, res){
         if(err) console.err('file didn\'t save');
         console.log('file saved');
       });
+      var wordCount = countWords(allData);
+      console.log(wordCount);
+      var JSONmap = mapCount(wordCount.children.children[0]);
+      // console.log(JSONmap);
       // console.log(allData[0].words);
       // console.log(allData);
-      res.send(countWords(allData));
+      var finalObject = {
+        "name": "flare",
+        "children": [
+          {
+            "name": "reddit",
+            "children": JSONmap
+          },
+          {
+            "name": "hackernews",
+            "children": JSONmap
+          },
+
+        ]
+      };
+      res.send(finalObject);
     });
   });
 });
 
+function mapCount(obj){
+  // console.log('------', obj);
+  var map = [];
+  for(var key in obj){
+    map.push({'name': key, 'size': obj[key] * 1000});
+  }
+
+  return map;
+}
 var port = process.env.PORT || 3000;
 app.listen(port);
 console.log(port);
